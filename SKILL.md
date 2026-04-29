@@ -1,12 +1,13 @@
 ---
 name: package-scaffolding
-description: Scaffold a Flutter feature following the BTG architecture. Use when the user asks to create a feature, scaffold a module, or implement a new flow.
+description: Scaffold a Flutter feature following the architecture. Use when the user asks to create a feature, scaffold a module, or implement a new flow.
 references:
   - references/ui.md
   - references/domain.md
   - references/application.md
   - references/infrastructure.md
   - references/common.md
+  - references/errors.md
 ---
 
 Generate all files for a Flutter feature following these strict rules:

@@ -16,7 +16,7 @@ lib/common/
   di/
     dependency_injection.dart
   providers/
-    btg_<package>_providers.dart
+    <package>_providers.dart
 ```
 
 ## Models
@@ -79,8 +79,8 @@ class DependencyInjection {
 Wraps all package BLoCs in a `MultiBlocProvider` so the app consumes them with a single widget:
 
 ```dart
-class BtgPackageProviders extends StatelessWidget {
-  const BtgPackageProviders({super.key, required this.child});
+class PackageProviders extends StatelessWidget {
+  const PackageProviders({super.key, required this.child});
 
   final Widget child;
 
@@ -99,13 +99,13 @@ class BtgPackageProviders extends StatelessWidget {
 
 ## Barrel file
 
-Export models, DI, and providers. Never export DTOs, data sources, mapping, or repository implementations:
+Export models, DI, providers, and all UI bloc files (bloc, event, state) — the debugger only resolves breakpoints in exported files. Never export DTOs, data sources, mapping, or repository implementations:
 
 ```dart
 // Common
 export 'common/models/<feature>/<feature>_model.dart';
 export 'common/di/dependency_injection.dart';
-export 'common/providers/btg_<package>_providers.dart';
+export 'common/providers/<package>_providers.dart';
 
 // Feature
 export 'features/<feature>/UI/page/<feature>_page.dart';
