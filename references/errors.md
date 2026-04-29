@@ -1,19 +1,43 @@
 # Error Handling
 
-## Pattern: Either (Result Left, Error Right)
+## Pattern: Either (Failure Left, Success Right)
 
-Use `Either` from the `fpdart` package to represent operations that can fail:
+Use the custom `Either` sealed class to represent operations that can fail:
 
-- **Left** → success (`result`)
-- **Right** → error (`error`)
+- **Left** → failure (`Failure`)
+- **Right** → success (`T`)
 
 ```dart
+sealed class Either<L, R> {
+  const Either();
+
+  T fold<T>(T Function(L) onLeft, T Function(R) onRight) => switch (this) {
+    Left<L, R>(:final value) => onLeft(value),
+    Right<L, R>(:final value) => onRight(value),
+  };
+}
+
+final class Left<L, R> extends Either<L, R> {
+  const Left(this.value);
+  final L value;
+}
+
+final class Right<L, R> extends Either<L, R> {
+  const Right(this.value);
+  final R value;
+}
+
 typedef ResultEither<T> = Either<Failure, T>;
 ```
 
 ## Shared Model Location
 
 `Shared` → `lib/src/common/model/common/result_model.dart`
+
+> **Rule — never create an error model inside the feature package.**
+> Do NOT scaffold `lib/common/models/errors/error_model.dart` or any class named `ErrorModel`.
+> Errors are represented by `Failure` (Left branch) and `ResultModel` (Right branch) from the `Shared` package.
+> Import `ResultModel` from Shared; do not redefine its fields.
 
 ## ResultModel Properties
 

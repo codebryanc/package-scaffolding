@@ -24,6 +24,44 @@ class FeatureResponseDto {
 }
 ```
 
+## RemoteDataSource
+
+Define `_controller` and one private `String` per method as URL properties. Dio handles the base URL internally — never include it here. After each call, delegate to `mapping` to parse the response:
+
+```dart
+class FeatureRemoteDataSource {
+  FeatureRemoteDataSource({required this.dio, required this.mapping});
+
+  final Dio dio;
+  final FeatureMapping mapping;
+
+  // [Properties]
+  final String _controller = '/feature';
+  final String _save = '/save';
+  final String _getById = '/get-by-id';
+
+  // [Methods]
+  Future<bool> save(FeatureRequestDto request) async {
+    final response = await dio.post(
+      '$_controller$_save',
+      data: request.toJson(),
+    );
+    return mapping.toSaveResult(response.data);
+  }
+
+  Future<FeatureModel> getById(String id) async {
+    final response = await dio.get('$_controller$_getById/$id');
+    return mapping.toModel(response.data);
+  }
+}
+```
+
+Rules:
+- `_controller` is the resource path (e.g. `/feature`)
+- Each method has its own private path property (e.g. `_save`, `_getById`)
+- Full URL = `'$_controller$_methodPath'` — Dio's `baseUrl` provides the host
+- Never inline a full URL string inside a method body
+
 ## RepositoryImpl
 
 Receives both data sources and decides which one to call via `_getConnection()`.

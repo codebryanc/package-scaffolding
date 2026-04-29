@@ -43,6 +43,8 @@ class FeatureSuccess extends FeatureState {
 
 ## Result Pattern
 
+### Plain types (bool, model, etc.)
+
 Always define a `result` variable at the start, assign it, and return it at the end. Never use early returns or ternary for this:
 
 ```dart
@@ -61,6 +63,30 @@ return repository.save();
 
 // ❌ avoid
 final bool result = isConnected ? await remote.save() : await local.save();
+```
+
+### Either<Exception, T>
+
+When the return type is `Either<Exception, T>`, use multiple explicit `return` statements instead of a default `result` variable. This avoids the `const Left(...)` initialisation error and keeps the flow readable:
+
+```dart
+// ✅ correct
+Future<Either<Exception, bool>> save({required String name}) async {
+  final bool isConnected = _getConnection();
+
+  if (isConnected) {
+    return Right(await remoteDataSource.save(request));
+  } else {
+    return Right(await localDataSource.save(request));
+  }
+}
+
+// ❌ avoid — triggers const-constructor init error
+Either<Exception, bool> result = const Left(SomeException());
+if (isConnected) {
+  result = Right(await remoteDataSource.save(request));
+}
+return result;
 ```
 
 ## Repository Connectivity
