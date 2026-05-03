@@ -8,6 +8,8 @@ references:
   - references/infrastructure.md
   - references/common.md
   - references/errors.md
+  - references/database.md
+  - references/model.md
 ---
 
 Generate all files for a Flutter feature following these strict rules:
